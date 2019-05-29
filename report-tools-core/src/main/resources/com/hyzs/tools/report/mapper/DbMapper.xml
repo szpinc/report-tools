@@ -1,0 +1,1630 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyzs.tools.report.mapper.DbMapper">
+
+    <!--
+    /**
+     * 代码自动生成，请不要修改，切记！！！
+     */
+    -->
+
+    <sql id="selectAllPropertiesAsDO">
+            select  id id, driver_class driverClass, name name, password password, url url, username username, type type, initial_size initialSize, max_active maxActive, min_idle minIdle, is_deleted isDeleted, gmt_create gmtCreate, gmt_modified gmtModified from db
+    </sql>
+
+    <sql id="selectByFieldNamesAsDO">
+       select <foreach collection="fieldNames" index="index" item="item"  separator=",">${item}</foreach> from db
+    </sql>
+
+    <sql id="selectAsDO">
+        <choose>
+            <when test="fieldNames==null or fieldNames.length==0">
+                  <include refid="selectAllPropertiesAsDO"/>
+            </when>
+            <otherwise>
+                  <include refid="selectByFieldNamesAsDO"/>
+            </otherwise>
+        </choose>
+    </sql>
+
+
+    <select id="listAll" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" /> where is_deleted=0
+    </select>
+
+    <select id="mapAll" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" /> where is_deleted=0
+    </select>
+
+
+    <select id="getById" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" /> where id=#{id} and is_deleted=0
+    </select>
+
+    <select id="listByIds" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" /> where is_deleted=0 and id in (<foreach collection="ids" index="index" item="item"  separator=",">#{item}</foreach>)
+    </select>
+
+    <select id="mapByIds" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" /> where is_deleted=0 and id in (<foreach collection="ids" index="index" item="item"  separator=",">#{item}</foreach>)
+    </select>
+
+    <update id="deleteById">
+        update  db set is_deleted=1,gmt_modified=CURRENT_TIMESTAMP where id=#{id}
+    </update>
+
+    <update id="deleteByIds">
+        update  db set is_deleted=1,gmt_modified=CURRENT_TIMESTAMP where id in (<foreach collection="ids" index="index" item="item"  separator=",">#{item}</foreach>)
+    </update>
+
+
+    <update id="updateNotNullProperties">
+        update db set
+                <if test="driverClass != null">driver_class=#{driverClass},</if>
+                <if test="name != null">name=#{name},</if>
+                <if test="password != null">password=#{password},</if>
+                <if test="url != null">url=#{url},</if>
+                <if test="username != null">username=#{username},</if>
+                <if test="type != null">type=#{type},</if>
+                <if test="initialSize != null">initial_size=#{initialSize},</if>
+                <if test="maxActive != null">max_active=#{maxActive},</if>
+                <if test="minIdle != null">min_idle=#{minIdle},</if>
+                gmt_modified=CURRENT_TIMESTAMP
+        where id=#{id}
+    </update>
+
+    <update id="updateAllProperties">
+        update db set
+                driver_class=#{driverClass},
+                name=#{name},
+                password=#{password},
+                url=#{url},
+                username=#{username},
+                type=#{type},
+                initial_size=#{initialSize},
+                max_active=#{maxActive},
+                min_idle=#{minIdle},
+                gmt_modified=CURRENT_TIMESTAMP
+        where id=#{id}
+    </update>
+
+
+    <insert id="insertAllProperties">
+              <selectKey keyProperty="id" resultType="java.lang.Long" order="AFTER">
+                        SELECT LAST_INSERT_ID() as id
+                      </selectKey>
+
+        insert into db
+        (
+                driver_class,
+                name,
+                password,
+                url,
+                username,
+                type,
+                initial_size,
+                max_active,
+                min_idle,
+                is_deleted,gmt_create,gmt_modified
+        )
+        values
+        (
+                #{driverClass},
+                #{name},
+                #{password},
+                #{url},
+                #{username},
+                #{type},
+                #{initialSize},
+                #{maxActive},
+                #{minIdle},
+                0,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+        )
+    </insert>
+
+
+    <insert id="insertNotNullProperties">
+                      <selectKey keyProperty="id" resultType="java.lang.Long" order="AFTER">
+                                SELECT LAST_INSERT_ID() as id
+                              </selectKey>
+        insert into db
+        (
+                <if test="driverClass!=null">driver_class,</if>
+                <if test="name!=null">name,</if>
+                <if test="password!=null">password,</if>
+                <if test="url!=null">url,</if>
+                <if test="username!=null">username,</if>
+                <if test="type!=null">type,</if>
+                <if test="initialSize!=null">initial_size,</if>
+                <if test="maxActive!=null">max_active,</if>
+                <if test="minIdle!=null">min_idle,</if>
+                is_deleted,gmt_create,gmt_modified
+        )
+        values
+        (
+                <if test="driverClass!=null">#{driverClass},</if>
+                <if test="name!=null">#{name},</if>
+                <if test="password!=null">#{password},</if>
+                <if test="url!=null">#{url},</if>
+                <if test="username!=null">#{username},</if>
+                <if test="type!=null">#{type},</if>
+                <if test="initialSize!=null">#{initialSize},</if>
+                <if test="maxActive!=null">#{maxActive},</if>
+                <if test="minIdle!=null">#{minIdle},</if>
+                0,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+        )
+    </insert>
+
+        <insert id="insertAllPropertiesList">
+           insert into db
+           (
+                   driver_class,
+                   name,
+                   password,
+                   url,
+                   username,
+                   type,
+                   initial_size,
+                   max_active,
+                   min_idle,
+                   is_deleted,gmt_create,gmt_modified
+                   )
+           values
+           <foreach collection="list" item="item" index="index" separator="," >
+           (
+                   #{item.driverClass},
+                   #{item.name},
+                   #{item.password},
+                   #{item.url},
+                   #{item.username},
+                   #{item.type},
+                   #{item.initialSize},
+                   #{item.maxActive},
+                   #{item.minIdle},
+                   0,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP
+           )
+           </foreach>
+       </insert>
+
+
+
+    <select id="listByProperty" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0 and ${propertyName}=#{value}
+    </select>
+
+    <select id="countByProperty" resultType="java.lang.Integer">
+        select count(1) from db
+            where is_deleted=0 and ${propertyName}=#{value}
+    </select>
+
+    <select id="mapByProperty" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0 and ${propertyName}=#{value}
+    </select>
+
+
+    <update id="updateNotNullFieldsByProperty">
+        update db set
+                <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0 and ${propertyName}=#{value}
+    </update>
+
+    <update id="updateAllFieldsByProperty">
+        update db set
+                driver_class=#{updateDO.driverClass},
+                name=#{updateDO.name},
+                password=#{updateDO.password},
+                url=#{updateDO.url},
+                username=#{updateDO.username},
+                type=#{updateDO.type},
+                initial_size=#{updateDO.initialSize},
+                max_active=#{updateDO.maxActive},
+                min_idle=#{updateDO.minIdle},
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0 and ${propertyName}=#{value}
+    </update>
+
+    <update id="deleteByProperty">
+        update db set
+                is_delete=1,
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0 and ${propertyName}=#{value}
+    </update>
+
+    <select id="listByProperties" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0
+            <foreach collection="propertyNames" item="propertyName" index="index">
+              and  ${propertyName}=#{values.[${index}]}
+            </foreach>
+    </select>
+
+    <select id="countByProperties" resultType="java.lang.Integer">
+        select count(1) from db
+            where is_deleted=0
+            <foreach collection="propertyNames" item="propertyName" index="index">
+              and ${propertyName}=#{values.[${index}]}
+            </foreach>
+    </select>
+
+    <select id="mapByProperties" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0
+            <foreach collection="propertyNames" item="propertyName" index="index">
+              and  ${propertyName}=#{values.[${index}]}
+            </foreach>
+    </select>
+
+    <update id="updateNotNullFieldsByProperties">
+        update db set
+                <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0
+         <foreach collection="propertyNames" item="propertyName" index="index">
+           and  ${propertyName}=#{values.[${index}]}
+         </foreach>
+    </update>
+
+    <update id="updateAllFieldsByProperties">
+        update db set
+                driver_class=#{updateDO.driverClass}
+                name=#{updateDO.name}
+                password=#{updateDO.password}
+                url=#{updateDO.url}
+                username=#{updateDO.username}
+                type=#{updateDO.type}
+                initial_size=#{updateDO.initialSize}
+                max_active=#{updateDO.maxActive}
+                min_idle=#{updateDO.minIdle}
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0
+         <foreach collection="propertyNames" item="propertyName" index="index">
+           and  ${propertyName}=#{values.[${index}]}
+         </foreach>
+    </update>
+
+    <update id="deleteByProperties">
+        update db set
+                is_deleted=1,
+                gmt_modified=CURRENT_TIMESTAMP
+         where is_deleted=0
+         <foreach collection="propertyNames" item="propertyName" index="index">
+           and  ${propertyName}=#{values.[${index}]}
+         </foreach>
+    </update>
+
+    <select id="_listByQueryItems" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </select>
+
+    <select id="_mapByQueryItems" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </select>
+
+    <select id="_countByQueryItems" resultType="java.lang.Integer">
+        select count(1) from db
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </select>
+
+   <update id="_updateNotNullFieldsByQueryItems">
+         update db set
+                <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                gmt_modified=CURRENT_TIMESTAMP
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </update>
+
+    <update id="_updateNotAllFieldsByQueryItems">
+         update db set
+                driver_class=#{updateDO.driverClass}
+                name=#{updateDO.name}
+                password=#{updateDO.password}
+                url=#{updateDO.url}
+                username=#{updateDO.username}
+                type=#{updateDO.type}
+                initial_size=#{updateDO.initialSize}
+                max_active=#{updateDO.maxActive}
+                min_idle=#{updateDO.minIdle}
+                gmt_modified=CURRENT_TIMESTAMP
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </update>
+
+    <update id="_deleteByQueryItems">
+         update db set
+                is_deleted=1,
+                gmt_modified=CURRENT_TIMESTAMP
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                          #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+    </update>
+
+    <select id="_listByPageQuery" resultType="com.hyzs.tools.report.dbo.DbDO">
+        <include refid="selectAsDO" />
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                  <choose>
+                      <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                          <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                              #{inItem}
+                          </foreach>
+                      </when>
+                      <otherwise>
+                         #{values.[${item.valueKeyName}]}
+                      </otherwise>
+                  </choose>
+              </if>
+            </foreach>
+            <if test="pageQuery.sortFieldNameForDatabase!=null">
+                order by ${pageQuery.sortFieldNameForDatabase} ${pageQuery.sortType}
+            </if>
+            limit #{values.pageOffset},#{pageQuery.pageSize}
+    </select>
+
+
+    <select id="_countByPageQuery" resultType="java.lang.Integer">
+        select count(1) from db
+            where is_deleted=0
+            <foreach collection="items" item="item" index="index">
+              and  ${item.fieldName} ${item.type.optr}
+              <if test="item.type.hasValue">
+                    <choose>
+                        <when test="item.type.optr=='in' || item.type.optr=='not in'">
+                            <foreach collection="values[item.valueKeyName]" item="inItem" close=")" open="(" separator=",">
+                                #{inItem}
+                            </foreach>
+                        </when>
+                        <otherwise>
+                           #{values.[${item.valueKeyName}]}
+                        </otherwise>
+                    </choose>
+                </if>
+            </foreach>
+    </select>
+
+
+
+          <select id="listByDriverClass" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and driver_class=#{driverClass}
+          </select>
+
+          <select id="countByDriverClass" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and driver_class=#{driverClass}
+           </select>
+
+           <select id="mapByDriverClass" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and driver_class=#{driverClass}
+           </select>
+
+           <update id="updateNotNullFieldsByDriverClass">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and driver_class=#{driverClass}
+          </update>
+
+          <update id="updateAllFieldsByDriverClass">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and driver_class=#{driverClass}
+            </update>
+
+            <update id="deleteByDriverClass">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and driver_class=#{driverClass}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInDriverClass" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and driver_class in
+                  <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInDriverClass" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and driver_class in
+                      <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInDriverClass" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and driver_class in
+                        <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInDriverClass">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and driver_class in
+                       <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInDriverClass">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and driver_class in
+                       <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInDriverClass">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and driver_class in
+                        <foreach collection="driverClassList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByName" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and name=#{name}
+          </select>
+
+          <select id="countByName" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and name=#{name}
+           </select>
+
+           <select id="mapByName" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and name=#{name}
+           </select>
+
+           <update id="updateNotNullFieldsByName">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and name=#{name}
+          </update>
+
+          <update id="updateAllFieldsByName">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and name=#{name}
+            </update>
+
+            <update id="deleteByName">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and name=#{name}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInName" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and name in
+                  <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInName" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and name in
+                      <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInName" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and name in
+                        <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInName">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and name in
+                       <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInName">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and name in
+                       <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInName">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and name in
+                        <foreach collection="nameList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByPassword" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and password=#{password}
+          </select>
+
+          <select id="countByPassword" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and password=#{password}
+           </select>
+
+           <select id="mapByPassword" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and password=#{password}
+           </select>
+
+           <update id="updateNotNullFieldsByPassword">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and password=#{password}
+          </update>
+
+          <update id="updateAllFieldsByPassword">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and password=#{password}
+            </update>
+
+            <update id="deleteByPassword">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and password=#{password}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInPassword" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and password in
+                  <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInPassword" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and password in
+                      <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInPassword" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and password in
+                        <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInPassword">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and password in
+                       <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInPassword">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and password in
+                       <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInPassword">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and password in
+                        <foreach collection="passwordList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByUrl" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and url=#{url}
+          </select>
+
+          <select id="countByUrl" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and url=#{url}
+           </select>
+
+           <select id="mapByUrl" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and url=#{url}
+           </select>
+
+           <update id="updateNotNullFieldsByUrl">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and url=#{url}
+          </update>
+
+          <update id="updateAllFieldsByUrl">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and url=#{url}
+            </update>
+
+            <update id="deleteByUrl">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and url=#{url}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInUrl" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and url in
+                  <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInUrl" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and url in
+                      <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInUrl" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and url in
+                        <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInUrl">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and url in
+                       <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInUrl">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and url in
+                       <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInUrl">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and url in
+                        <foreach collection="urlList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByUsername" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and username=#{username}
+          </select>
+
+          <select id="countByUsername" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and username=#{username}
+           </select>
+
+           <select id="mapByUsername" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and username=#{username}
+           </select>
+
+           <update id="updateNotNullFieldsByUsername">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and username=#{username}
+          </update>
+
+          <update id="updateAllFieldsByUsername">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and username=#{username}
+            </update>
+
+            <update id="deleteByUsername">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and username=#{username}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInUsername" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and username in
+                  <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInUsername" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and username in
+                      <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInUsername" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and username in
+                        <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInUsername">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and username in
+                       <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInUsername">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and username in
+                       <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInUsername">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and username in
+                        <foreach collection="usernameList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByType" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and type=#{type}
+          </select>
+
+          <select id="countByType" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and type=#{type}
+           </select>
+
+           <select id="mapByType" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and type=#{type}
+           </select>
+
+           <update id="updateNotNullFieldsByType">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and type=#{type}
+          </update>
+
+          <update id="updateAllFieldsByType">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and type=#{type}
+            </update>
+
+            <update id="deleteByType">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and type=#{type}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInType" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and type in
+                  <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInType" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and type in
+                      <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInType" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and type in
+                        <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInType">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and type in
+                       <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInType">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and type in
+                       <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInType">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and type in
+                        <foreach collection="typeList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByInitialSize" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and initial_size=#{initialSize}
+          </select>
+
+          <select id="countByInitialSize" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and initial_size=#{initialSize}
+           </select>
+
+           <select id="mapByInitialSize" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and initial_size=#{initialSize}
+           </select>
+
+           <update id="updateNotNullFieldsByInitialSize">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and initial_size=#{initialSize}
+          </update>
+
+          <update id="updateAllFieldsByInitialSize">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and initial_size=#{initialSize}
+            </update>
+
+            <update id="deleteByInitialSize">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and initial_size=#{initialSize}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInInitialSize" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and initial_size in
+                  <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInInitialSize" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and initial_size in
+                      <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInInitialSize" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and initial_size in
+                        <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInInitialSize">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and initial_size in
+                       <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInInitialSize">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and initial_size in
+                       <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInInitialSize">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and initial_size in
+                        <foreach collection="initialSizeList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByMaxActive" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and max_active=#{maxActive}
+          </select>
+
+          <select id="countByMaxActive" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and max_active=#{maxActive}
+           </select>
+
+           <select id="mapByMaxActive" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and max_active=#{maxActive}
+           </select>
+
+           <update id="updateNotNullFieldsByMaxActive">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and max_active=#{maxActive}
+          </update>
+
+          <update id="updateAllFieldsByMaxActive">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and max_active=#{maxActive}
+            </update>
+
+            <update id="deleteByMaxActive">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and max_active=#{maxActive}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInMaxActive" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and max_active in
+                  <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInMaxActive" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and max_active in
+                      <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInMaxActive" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and max_active in
+                        <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInMaxActive">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and max_active in
+                       <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInMaxActive">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and max_active in
+                       <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInMaxActive">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and max_active in
+                        <foreach collection="maxActiveList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+          <select id="listByMinIdle" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and min_idle=#{minIdle}
+          </select>
+
+          <select id="countByMinIdle" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and min_idle=#{minIdle}
+           </select>
+
+           <select id="mapByMinIdle" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                  where is_deleted=0 and min_idle=#{minIdle}
+           </select>
+
+           <update id="updateNotNullFieldsByMinIdle">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+               where is_deleted=0 and min_idle=#{minIdle}
+          </update>
+
+          <update id="updateAllFieldsByMinIdle">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and min_idle=#{minIdle}
+            </update>
+
+            <update id="deleteByMinIdle">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                 where is_deleted=0 and min_idle=#{minIdle}
+            </update>
+
+
+
+            <!--property in -->
+
+         <select id="listByInMinIdle" resultType="com.hyzs.tools.report.dbo.DbDO">
+              <include refid="selectAsDO" />
+                  where is_deleted=0 and min_idle in
+                  <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                      #{inItem}
+                  </foreach>
+          </select>
+
+          <select id="countByInMinIdle" resultType="java.lang.Integer">
+                select count(1) from db
+                where is_deleted=0 and min_idle in
+                      <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                          #{inItem}
+                      </foreach>
+           </select>
+
+           <select id="mapByInMinIdle" resultType="com.hyzs.tools.report.dbo.DbDO">
+                <include refid="selectAsDO" />
+                    where is_deleted=0 and min_idle in
+                        <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+           </select>
+
+           <update id="updateNotNullFieldsByInMinIdle">
+              update db set
+                      <if test="updateDO.driverClass != null">driver_class=#{updateDO.driverClass},</if>
+                      <if test="updateDO.name != null">name=#{updateDO.name},</if>
+                      <if test="updateDO.password != null">password=#{updateDO.password},</if>
+                      <if test="updateDO.url != null">url=#{updateDO.url},</if>
+                      <if test="updateDO.username != null">username=#{updateDO.username},</if>
+                      <if test="updateDO.type != null">type=#{updateDO.type},</if>
+                      <if test="updateDO.initialSize != null">initial_size=#{updateDO.initialSize},</if>
+                      <if test="updateDO.maxActive != null">max_active=#{updateDO.maxActive},</if>
+                      <if test="updateDO.minIdle != null">min_idle=#{updateDO.minIdle},</if>
+                      gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and min_idle in
+                       <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+          </update>
+
+          <update id="updateAllFieldsByInMinIdle">
+                update db set
+                        driver_class=#{updateDO.driverClass},
+                        name=#{updateDO.name},
+                        password=#{updateDO.password},
+                        url=#{updateDO.url},
+                        username=#{updateDO.username},
+                        type=#{updateDO.type},
+                        initial_size=#{updateDO.initialSize},
+                        max_active=#{updateDO.maxActive},
+                        min_idle=#{updateDO.minIdle},
+                        gmt_modified=CURRENT_TIMESTAMP
+                   where is_deleted=0 and min_idle in
+                       <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                           #{inItem}
+                       </foreach>
+            </update>
+
+            <update id="deleteByInMinIdle">
+                update db set
+                        is_deleted=1,
+                        gmt_modified=CURRENT_TIMESTAMP
+                    where is_deleted=0 and min_idle in
+                        <foreach collection="minIdleList" item="inItem" close=")" open="(" separator=",">
+                            #{inItem}
+                        </foreach>
+            </update>
+
+</mapper>
+

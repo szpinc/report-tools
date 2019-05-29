@@ -1,0 +1,21 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /report-tools-webapi
+spring:
+  application:
+    name: REPORT-TOOLS-WEBAPI
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://192.168.31.100:3306/report-tool?characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+
+
+
+logging:
+  level:
+    com.hyzs: debug
+#    - com.hyzs.tools.report.mapper: warn
