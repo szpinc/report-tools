@@ -69,3 +69,14 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+report-tools-core/report-tools-core.iml
+report-tools-core/target/
+report-tools-webapi/target/
+report-tools.iml
+report-tools-webapi/report-tools-webapi.iml
