@@ -11,12 +11,14 @@ import com.hyzs.tools.report.service.ReportCategoryService;
 import com.hyzs.tools.report.vo.ReportCategoryVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 @Api(tags = "报表分类接口")
 @RequestMapping(value = "/webapi/reportCategory", method = RequestMethod.POST)
-public class ReportCategoryController extends BaseController {
+public class ReportCategoryController {
 
     @Autowired
     private ReportCategoryService reportCategoryService;
@@ -51,9 +53,16 @@ public class ReportCategoryController extends BaseController {
 
     @RequestMapping("saveReportCategory")
     @ApiOperation(value = "添加或修改报表分类", notes = "添加分类数据时不需要传入id参数,修改数据才需要id参数")
-    public ResponseVO saveReportCategory(@RequestBody ReportCategoryDTO reportCategoryDTO) {
+    public ResponseVO saveReportCategory(@RequestBody @Valid ReportCategoryDTO reportCategoryDTO) {
         ReportCategoryDO reportCategoryDO = CommonUtils.newInstance(reportCategoryDTO, ReportCategoryDO.class);
         reportCategoryService.save(reportCategoryDO);
         return CommonUtils.okResponseVO("success");
+    }
+
+    @RequestMapping("deleteReportCategory")
+    @ApiOperation(value = "删除报表分类", notes = "通过'id'删除报表分类")
+    public ResponseVO<?> deleteReportCategory(@ApiParam(value = "报表分类id", required = true) @RequestBody Long id) {
+        reportCategoryService.deleteById(id);
+        return CommonUtils.okResponseVO(null);
     }
 }

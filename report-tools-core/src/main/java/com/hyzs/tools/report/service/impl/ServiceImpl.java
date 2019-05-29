@@ -7,8 +7,11 @@ import com.hyzs.gz.common.dao.dto.PageQueryDTO;
 import com.hyzs.gz.common.dao.util.DaoUtils;
 import com.hyzs.tools.report.service.IService;
 import com.hyzs.tools.report.vo.BaseVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @date 2019/5/29 8:15
  */
+@Slf4j
 public class ServiceImpl<M extends CommonDaoManager<T, K>, T, K> implements IService<T, K> {
 
     @Autowired
@@ -24,7 +28,22 @@ public class ServiceImpl<M extends CommonDaoManager<T, K>, T, K> implements ISer
 
     @Override
     public void save(T t) {
-        manager.insertAllProperties(t);
+        Class<?> clazz = t.getClass();
+        try {
+            Field id = clazz.getDeclaredField("id");
+            id.setAccessible(true);
+            if (null == id.get(t)) {
+                manager.insertAllProperties(t);
+            } else {
+                update(t);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            if (log.isErrorEnabled()) {
+                log.error("对象id属性解析失败");
+            }
+            e.printStackTrace();
+        }
+
     }
 
     @Override

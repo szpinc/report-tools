@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,10 +16,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @ApiModel("报表分类信息")
 public class ReportCategoryDTO {
-    @ApiModelProperty("报表分类ID")
-    private String id;
-    @ApiModelProperty("报表分类名")
-    @NotNull(message = "分类名不能为空")
+    @ApiModelProperty("报表分类ID，新增不需要传id")
+    private Long id;
+    @ApiModelProperty("报表分类名;分类名为空会报错,报错信息为{'code':-1,'msg':''}")
+    @NotEmpty(message = "分类名不能为空")
     private String name;
     @ApiModelProperty("报表分类描述")
     private String description;

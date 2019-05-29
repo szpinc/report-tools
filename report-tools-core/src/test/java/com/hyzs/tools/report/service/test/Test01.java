@@ -1,19 +1,9 @@
 package com.hyzs.tools.report.service.test;
 
-import com.hyzs.gz.common.core.bo.PageBO;
-import com.hyzs.gz.common.dao.dto.PageQueryDTO;
-import com.hyzs.gz.common.dao.util.DaoUtils;
-import com.hyzs.tools.report.service.ReportCategoryService;
-import com.hyzs.tools.report.service.impl.ReportCategoryServiceImpl;
-import com.hyzs.tools.report.vo.ReportCategoryVO;
+import lombok.Data;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Field;
 
 /**
  * @author Sun Zhi Peng
@@ -21,23 +11,28 @@ import java.util.List;
  * @date 2019/5/29 10:34
  */
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class Test01 {
 
     @Test
-    public void testDemo() {
-        List<Integer> integers = Arrays.asList(1, 2, 3, 5, 6);
-        PageQueryDTO pageQueryDTO = new PageQueryDTO();
-        pageQueryDTO.setPageSize(2);
-        pageQueryDTO.setCurrPage(1);
+    public void testDemo() throws NoSuchFieldException, IllegalAccessException {
 
-        PageBO<Integer> integerPageBO = DaoUtils.listDOByPage(() -> integers, new PageQueryDTO());
+        Demo demo = new Demo();
+        demo.setId(1L);
+        demo.setName("test");
 
+        Field id = demo.getClass().getDeclaredField("id");
 
-        System.out.println("总记录数:" + integerPageBO.getTotalCount());
-        integerPageBO.getList().forEach(System.out::println);
+        id.setAccessible(true);
+        System.out.println(id.get(demo));
+
     }
 
 
+}
+
+@Data
+class Demo {
+    private Long id;
+    private String name;
 }
